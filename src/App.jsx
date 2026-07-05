@@ -32,6 +32,7 @@ import {
 } from 'lucide-react';
 import { Link, NavLink, Route, Routes, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { categories, getStore, products, stores, whatsappUrl } from './data';
+import facadeImage from '../assets/img/brand/fachada-5-continentes.png';
 
 const categoryIcons = { Laptop, Shirt, Armchair, Sparkles, Dumbbell, Watch };
 
@@ -189,7 +190,7 @@ function Home() {
           </div>
           <div className="hero__visual">
             <div className="hero__shape"></div>
-            <img src="/assets/img/brand/fachada-5-continentes.png" alt="Fachada del Centro Comercial 5 Continentes" />
+            <img src={facadeImage} alt="Fachada del Centro Comercial 5 Continentes" />
             <div className="floating-card floating-card--top"><span><Store size={19} /></span><div><strong>600+</strong><small>tiendas para descubrir</small></div></div>
             <div className="floating-card floating-card--bottom"><span><MessageCircle size={19} /></span><div><strong>Contacto directo</strong><small>con cada negocio</small></div></div>
           </div>
