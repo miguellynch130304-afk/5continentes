@@ -1,10 +1,10 @@
-import details1Image from '../assets/img/product/details-1.jpg';
-import details2Image from '../assets/img/product/details-2.jpg';
-import details3Image from '../assets/img/product/details-3.jpg';
-import details4Image from '../assets/img/product/details-4.jpg';
-import trending1Image from '../assets/img/product/tranding-1.jpg';
-import trending2Image from '../assets/img/product/tranding-2.jpg';
-import trending3Image from '../assets/img/product/tranding-3.jpg';
+import earbudsImage from '../assets/img/catalog/audifonos-pro.jpg';
+import lampImage from '../assets/img/catalog/lampara-nordica.jpg';
+import backpackImage from '../assets/img/catalog/mochila-city.jpg';
+import organizerImage from '../assets/img/catalog/organizador-modular.jpg';
+import skincareImage from '../assets/img/catalog/set-cuidado-facial.jpg';
+import smartwatchImage from '../assets/img/catalog/smartwatch-fit.jpg';
+import sneakersImage from '../assets/img/catalog/zapatillas-urban.jpg';
 
 export const categories = [
   { id: 'tecnologia', name: 'Tecnología', icon: 'Laptop', color: '#e8f3ff' },
@@ -76,7 +76,7 @@ export const products = [
     storeId: 'tech-zone',
     name: 'Audífonos inalámbricos Pro',
     category: 'Tecnología',
-    image: details1Image,
+    image: earbudsImage,
     summary: 'Sonido envolvente, conexión Bluetooth y estuche de carga compacto.',
     details: ['Bluetooth 5.3', 'Micrófono integrado', 'Hasta 24 horas con el estuche'],
     featured: true,
@@ -86,7 +86,7 @@ export const products = [
     storeId: 'tech-zone',
     name: 'Smartwatch Fit X2',
     category: 'Tecnología',
-    image: details2Image,
+    image: smartwatchImage,
     summary: 'Monitorea tu actividad y recibe notificaciones desde tu muñeca.',
     details: ['Pantalla táctil', 'Monitor de actividad', 'Resistencia al agua'],
     featured: true,
@@ -96,7 +96,7 @@ export const products = [
     storeId: 'urban-style',
     name: 'Zapatillas Urban Classic',
     category: 'Moda',
-    image: trending1Image,
+    image: sneakersImage,
     summary: 'Diseño urbano cómodo para acompañarte todos los días.',
     details: ['Suela antideslizante', 'Material respirable', 'Diversas tallas'],
     featured: true,
@@ -106,7 +106,7 @@ export const products = [
     storeId: 'urban-style',
     name: 'Mochila City',
     category: 'Accesorios',
-    image: trending2Image,
+    image: backpackImage,
     summary: 'Espaciosa, resistente y diseñada para el ritmo de la ciudad.',
     details: ['Compartimento para laptop', 'Tela impermeable', 'Correas acolchadas'],
     featured: false,
@@ -116,7 +116,7 @@ export const products = [
     storeId: 'casa-viva',
     name: 'Lámpara Nórdica',
     category: 'Hogar',
-    image: details3Image,
+    image: lampImage,
     summary: 'Iluminación cálida con un diseño limpio para tu hogar u oficina.',
     details: ['Luz cálida', 'Bajo consumo', 'Base antideslizante'],
     featured: true,
@@ -126,7 +126,7 @@ export const products = [
     storeId: 'casa-viva',
     name: 'Organizador modular',
     category: 'Hogar',
-    image: trending3Image,
+    image: organizerImage,
     summary: 'Organiza tus ambientes con módulos fáciles de combinar.',
     details: ['Armado sencillo', 'Material resistente', 'Diseño modular'],
     featured: false,
@@ -136,7 +136,7 @@ export const products = [
     storeId: 'bella-lima',
     name: 'Set de cuidado facial',
     category: 'Belleza',
-    image: details4Image,
+    image: skincareImage,
     summary: 'Rutina práctica para limpiar, hidratar y proteger tu piel.',
     details: ['Uso diario', 'Tres pasos', 'Para todo tipo de piel'],
     featured: true,
