@@ -26,13 +26,28 @@ npm run build
 - Panel responsive para el encargado del establecimiento.
 - Formulario de personalización del negocio.
 - Administración visual de productos.
+- Flujo demostrativo **5C Ahora**: solicitud, búsqueda simulada y respuestas confirmadas.
+- Separación temporal demostrativa con código.
+- Mapa interno interactivo por pisos y locales.
+- Bandeja de solicitudes para que cada negocio responda disponibilidad.
 
 ## Estructura
 
 - `src/App.jsx`: páginas, rutas y componentes del MVP.
 - `src/data.js`: datos de demostración y construcción de enlaces de WhatsApp.
 - `src/styles.css`: sistema visual responsive.
+- `src/features/radar/`: experiencia 5C Ahora y solicitudes simuladas.
+- `src/features/map/`: plano interno interactivo demostrativo.
 - `assets/`: recursos heredados de la plantilla original.
+
+## Rutas principales de la demo
+
+- `/radar`: solicitud del comprador y respuestas de tiendas.
+- `/mapa`: búsqueda y ubicación de locales por piso.
+- `/panel`: gestión del negocio y bandeja de solicitudes.
+
+Las respuestas, reservas y posiciones del mapa son datos de demostración. No se
+persisten al recargar la página.
 
 ## Para operar con 600 tiendas
 

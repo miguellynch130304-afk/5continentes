@@ -68,6 +68,32 @@ export const stores = [
     color: '#d6487e',
     verified: false,
   },
+  {
+    id: 'distrito-5',
+    name: 'Distrito 5',
+    category: 'Moda',
+    location: 'Pabellón B · Tienda 214',
+    floor: 'Segundo piso',
+    phone: '51943210987',
+    schedule: 'Lun. a dom. · 10:00 a. m. – 8:00 p. m.',
+    description: 'Zapatillas urbanas y modelos exclusivos para todos los días.',
+    initials: 'D5',
+    color: '#166b91',
+    verified: true,
+  },
+  {
+    id: 'paso-firme',
+    name: 'Paso Firme',
+    category: 'Moda',
+    location: 'Pabellón C · Tienda 307',
+    floor: 'Primer piso',
+    phone: '51932109876',
+    schedule: 'Lun. a sáb. · 10:00 a. m. – 7:30 p. m.',
+    description: 'Calzado cómodo, urbano y casual con atención personalizada.',
+    initials: 'PF',
+    color: '#9a6a19',
+    verified: true,
+  },
 ];
 
 export const products = [

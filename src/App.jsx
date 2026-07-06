@@ -5,6 +5,7 @@ import {
   ArrowRight,
   BadgeCheck,
   BarChart3,
+  BellRing,
   Building2,
   Check,
   ChevronRight,
@@ -13,9 +14,11 @@ import {
   Eye,
   Facebook,
   Instagram,
+  Inbox,
   Laptop,
   LayoutDashboard,
   MapPin,
+  MapPinned,
   Menu,
   MessageCircle,
   Package,
@@ -26,6 +29,8 @@ import {
   ShoppingBag,
   Sparkles,
   Store,
+  ThumbsDown,
+  ThumbsUp,
   UserRound,
   Watch,
   X,
@@ -33,6 +38,9 @@ import {
 import { Link, NavLink, Route, Routes, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { categories, getStore, products, stores, whatsappUrl } from './data';
 import facadeImage from '../assets/img/brand/fachada-5-continentes.png';
+import RadarPage from './features/radar/RadarPage';
+import MallMapPage from './features/map/MallMap';
+import { merchantLeads } from './features/radar/demoData';
 
 const categoryIcons = { Laptop, Shirt, Armchair, Sparkles, Dumbbell, Watch };
 
@@ -55,7 +63,7 @@ function Header() {
 
   const search = (event) => {
     event.preventDefault();
-    navigate(`/explorar?q=${encodeURIComponent(term)}`);
+    navigate(`/radar?buscar=${encodeURIComponent(term)}`);
     setOpen(false);
   };
 
@@ -78,6 +86,8 @@ function Header() {
           <nav className={`nav ${open ? 'nav--open' : ''}`}>
             <NavLink to="/" onClick={() => setOpen(false)}>Inicio</NavLink>
             <NavLink to="/explorar" onClick={() => setOpen(false)}>Tiendas</NavLink>
+            <NavLink to="/mapa" onClick={() => setOpen(false)}>Mapa</NavLink>
+            <NavLink to="/radar" className="nav__live" onClick={() => setOpen(false)}><span></span> 5C Ahora</NavLink>
             <NavLink to="/panel" className="nav__admin" onClick={() => setOpen(false)}>
               <UserRound size={17} /> Mi negocio
             </NavLink>
@@ -101,7 +111,7 @@ function Footer() {
           <div className="socials"><a href="#" aria-label="Facebook"><Facebook size={18} /></a><a href="#" aria-label="Instagram"><Instagram size={18} /></a></div>
         </div>
         <div><h4>Explora</h4><Link to="/explorar">Todas las tiendas</Link><Link to="/explorar?categoria=Tecnología">Tecnología</Link><Link to="/explorar?categoria=Moda">Moda</Link></div>
-        <div><h4>Centro comercial</h4><a href="#como-funciona">Cómo funciona</a><a href="#ubicacion">Cómo llegar</a><Link to="/panel">Acceso para tiendas</Link></div>
+        <div><h4>Centro comercial</h4><Link to="/radar">5C Ahora</Link><Link to="/mapa">Mapa del centro</Link><Link to="/panel">Acceso para tiendas</Link></div>
         <div><h4>Visítanos</h4><p><MapPin size={16} /> Av. Argentina 3093, Lima</p><p><Clock3 size={16} /> Lun. a dom. · 9:00 a. m. – 8:00 p. m.</p></div>
       </div>
       <div className="container footer__bottom">© 2026 Centro Comercial 5 Continentes <span>Privacidad · Términos</span></div>
@@ -170,7 +180,7 @@ function Home() {
 
   const submit = (event) => {
     event.preventDefault();
-    navigate(`/explorar?q=${encodeURIComponent(query)}`);
+    navigate(`/radar?buscar=${encodeURIComponent(query)}`);
   };
 
   return (
@@ -180,11 +190,11 @@ function Home() {
           <div className="hero__content">
             <span className="pill"><Building2 size={16} /> 600+ negocios en un solo lugar</span>
             <h1>Todo lo que buscas, <em>más cerca de ti.</em></h1>
-            <p>Descubre productos y comercios de 5 Continentes. Encuentra lo que necesitas y habla directamente con la tienda.</p>
+            <p>Dinos qué necesitas y las tiendas te confirman si lo tienen. Sin recorrer cientos de catálogos ni perder tiempo.</p>
             <form className="hero-search" onSubmit={submit}>
               <Search size={21} />
               <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="¿Qué estás buscando hoy?" />
-              <button>Explorar</button>
+              <button>Buscar en vivo</button>
             </form>
             <div className="hero__hints"><span>Búsquedas frecuentes:</span><Link to="/explorar?q=audífonos">Audífonos</Link><Link to="/explorar?q=zapatillas">Zapatillas</Link><Link to="/explorar?q=hogar">Hogar</Link></div>
           </div>
@@ -192,7 +202,7 @@ function Home() {
             <div className="hero__shape"></div>
             <img src={facadeImage} alt="Fachada del Centro Comercial 5 Continentes" />
             <div className="floating-card floating-card--top"><span><Store size={19} /></span><div><strong>600+</strong><small>tiendas para descubrir</small></div></div>
-            <div className="floating-card floating-card--bottom"><span><MessageCircle size={19} /></span><div><strong>Contacto directo</strong><small>con cada negocio</small></div></div>
+            <div className="floating-card floating-card--bottom"><span><BellRing size={19} /></span><div><strong>Confirmado ahora</strong><small>por cada negocio</small></div></div>
           </div>
         </div>
       </section>
@@ -213,12 +223,13 @@ function Home() {
 
       <section className="section" id="como-funciona">
         <div className="container">
-          <div className="section-heading section-heading--center"><div><span className="eyebrow">Simple y directo</span><h2>Encuentra. Conecta. Visita.</h2></div></div>
+          <div className="section-heading section-heading--center"><div><span className="eyebrow">Así funciona 5C Ahora</span><h2>Pregunta. Recibe respuestas. Visita.</h2></div></div>
           <div className="steps">
-            <div className="step"><span>1</span><Search /><h3>Busca lo que necesitas</h3><p>Explora por producto, categoría o nombre de tienda.</p></div>
-            <div className="step"><span>2</span><MessageCircle /><h3>Conversa con la tienda</h3><p>Pregunta por disponibilidad y detalles directamente por WhatsApp.</p></div>
-            <div className="step"><span>3</span><MapPin /><h3>Visita el local</h3><p>Ubica fácilmente el pabellón, piso y número de tienda.</p></div>
+            <div className="step"><span>1</span><Search /><h3>Cuenta qué estás buscando</h3><p>Describe el producto, talla, color o cualquier detalle importante.</p></div>
+            <div className="step"><span>2</span><BellRing /><h3>Las tiendas responden</h3><p>Recibe disponibilidad confirmada y alternativas en pocos minutos.</p></div>
+            <div className="step"><span>3</span><MapPinned /><h3>Sepáralo y encuéntralo</h3><p>Reserva temporalmente y sigue el mapa hasta el local.</p></div>
           </div>
+          <div className="steps-cta"><Link className="button button--primary" to="/radar">Probar 5C Ahora <ArrowRight /></Link><Link className="button button--outline" to="/mapa">Explorar el mapa <MapPin /></Link></div>
         </div>
       </section>
 
@@ -336,6 +347,7 @@ function ProductPage() {
 function Dashboard() {
   const [active, setActive] = useState('resumen');
   const [saved, setSaved] = useState(false);
+  const [leadStatuses, setLeadStatuses] = useState({});
   const store = stores[0];
   const storeProducts = products.filter((product) => product.storeId === store.id);
   const save = (event) => {
@@ -353,6 +365,7 @@ function Dashboard() {
           <button className={active === 'resumen' ? 'active' : ''} onClick={() => setActive('resumen')}><LayoutDashboard /> Resumen</button>
           <button className={active === 'perfil' ? 'active' : ''} onClick={() => setActive('perfil')}><Store /> Perfil del negocio</button>
           <button className={active === 'productos' ? 'active' : ''} onClick={() => setActive('productos')}><Package /> Mis productos <span>{storeProducts.length}</span></button>
+          <button className={active === 'solicitudes' ? 'active' : ''} onClick={() => setActive('solicitudes')}><Inbox /> Solicitudes <span>{merchantLeads.length}</span></button>
           <Link to={`/tienda/${store.id}`}><Eye /> Ver tienda pública</Link>
         </nav>
         <Link className="dashboard-exit" to="/"><ArrowLeft /> Volver al directorio</Link>
@@ -371,6 +384,19 @@ function Dashboard() {
           </>}
           {active === 'perfil' && <form className="editor panel-card" onSubmit={save}><div className="dashboard-title"><div><h1>Perfil del negocio</h1><p>Esta información será visible para todos los visitantes.</p></div><button className="button button--primary" type="submit">Guardar cambios</button></div><div className="form-grid"><label>Nombre comercial<input defaultValue={store.name} /></label><label>Categoría<select defaultValue={store.category}>{categories.map((item) => <option key={item.id}>{item.name}</option>)}</select></label><label className="form-wide">Descripción<textarea defaultValue={store.description} rows="4" /></label><label>WhatsApp<input defaultValue={`+${store.phone}`} /></label><label>Ubicación<input defaultValue={store.location} /></label><label>Horario<input defaultValue={store.schedule} /></label><label>Piso<input defaultValue={store.floor} /></label></div></form>}
           {active === 'productos' && <><div className="dashboard-title"><div><h1>Mis productos</h1><p>Publica información útil, sin precio ni carrito de compra.</p></div><button className="button button--primary"><Plus size={18} /> Nuevo producto</button></div><div className="products-table panel-card"><div className="table-head"><span>Producto</span><span>Categoría</span><span>Estado</span><span>Acciones</span></div>{storeProducts.map((product) => <div className="table-row" key={product.id}><span><img src={product.image} alt="" /><strong>{product.name}</strong></span><span>{product.category}</span><span className="status"><i></i> Visible</span><span><Link to={`/producto/${product.id}`} aria-label="Ver"><Eye /></Link><button aria-label="Editar"><Pencil /></button></span></div>)}</div></>}
+          {active === 'solicitudes' && <>
+            <div className="dashboard-title"><div><span className="live-pill"><span className="live-dot"></span> 5C Ahora</span><h1>Solicitudes de clientes</h1><p>Responde rápido para aparecer entre las opciones confirmadas.</p></div><span className="response-score"><strong>92%</strong> tasa de respuesta</span></div>
+            <div className="lead-list">{merchantLeads.map((lead) => {
+              const status = leadStatuses[lead.id];
+              return <article className={`lead-card ${status ? `lead-card--${status}` : ''}`} key={lead.id}>
+                <div className="lead-card__icon"><BellRing /></div>
+                <div className="lead-card__content"><div><span>{lead.category}</span><time>{lead.time}</time></div><h2>{lead.query}</h2><p>{lead.detail}</p><small>Solicitud de {lead.customer}</small></div>
+                <div className="lead-card__actions">
+                  {!status ? <><button className="button button--primary" onClick={() => setLeadStatuses((current) => ({ ...current, [lead.id]: 'yes' }))}><ThumbsUp /> Sí, lo tengo</button><button className="button button--outline" onClick={() => setLeadStatuses((current) => ({ ...current, [lead.id]: 'similar' }))}><Sparkles /> Tengo algo similar</button><button className="lead-no" onClick={() => setLeadStatuses((current) => ({ ...current, [lead.id]: 'no' }))}><ThumbsDown /> No disponible</button></> : <div className="lead-answer"><Check /> <span><strong>{status === 'yes' ? 'Disponibilidad confirmada' : status === 'similar' ? 'Alternativa ofrecida' : 'Marcado no disponible'}</strong><button onClick={() => setLeadStatuses((current) => ({ ...current, [lead.id]: '' }))}>Cambiar respuesta</button></span></div>}
+                </div>
+              </article>;
+            })}</div>
+          </>}
         </div>
       </main>
     </div>
@@ -388,6 +414,8 @@ export default function App() {
       <Route path="/explorar" element={<Explore />} />
       <Route path="/tienda/:storeId" element={<StorePage />} />
       <Route path="/producto/:productId" element={<ProductPage />} />
+      <Route path="/radar" element={<RadarPage Layout={Layout} />} />
+      <Route path="/mapa" element={<MallMapPage Layout={Layout} />} />
       <Route path="/panel" element={<Dashboard />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
