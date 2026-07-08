@@ -31,7 +31,7 @@ export default function VirtualTourPage({ Layout }) {
   const initialIndex = Math.max(0, tourStops.findIndex((stop) => stop.local === initialStop || stop.id === initialStop));
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [query, setQuery] = useState('');
-  const [immersive, setImmersive] = useState(true);
+  const [immersive, setImmersive] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [look, setLook] = useState({ x: 50, y: 50 });
   const activeStop = tourStops[activeIndex];
@@ -57,7 +57,10 @@ export default function VirtualTourPage({ Layout }) {
     setSearchParams({ local: tourStops[nextIndex].local });
   };
 
+  const isInteractiveTarget = (target) => target.closest('button, a, input, textarea, select, label');
+
   const updateLook = (event) => {
+    if (isInteractiveTarget(event.target)) return;
     if (!immersive && !dragging) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const x = Math.min(100, Math.max(0, ((event.clientX - rect.left) / rect.width) * 100));
@@ -66,6 +69,7 @@ export default function VirtualTourPage({ Layout }) {
   };
 
   const startLook = (event) => {
+    if (!immersive || isInteractiveTarget(event.target) || event.pointerType === 'touch') return;
     setDragging(true);
     event.currentTarget.setPointerCapture?.(event.pointerId);
     updateLook(event);
@@ -134,8 +138,11 @@ export default function VirtualTourPage({ Layout }) {
                 onPointerLeave={stopLook}
               >
                 <div className="tour-immersive-bar">
-                  <span><MousePointer2 size={14} /> {immersive ? 'Arrastra o mueve para mirar' : 'Vista fija'}</span>
-                  <button onClick={(event) => { event.stopPropagation(); setImmersive((value) => !value); }}>
+                  <span><MousePointer2 size={14} /> {immersive ? 'Mueve el cursor para mirar' : 'Vista normal para explorar'}</span>
+                  <button
+                    onPointerDown={(event) => event.stopPropagation()}
+                    onClick={(event) => { event.stopPropagation(); setImmersive((value) => !value); }}
+                  >
                     {immersive ? 'Vista normal' : 'Modo inmersivo'}
                   </button>
                 </div>
@@ -147,12 +154,17 @@ export default function VirtualTourPage({ Layout }) {
                 />
                 <div className="tour-photo-gradient"></div>
                 {activeStop.hotSpots.map((spot) => (
-                  <button className="tour-hotspot" style={{ left: `${spot.x}%`, top: `${spot.y}%` }} key={spot.label}>
+                  <button
+                    className="tour-hotspot"
+                    style={{ left: `${spot.x}%`, top: `${spot.y}%` }}
+                    key={spot.label}
+                    onPointerDown={(event) => event.stopPropagation()}
+                  >
                     <span></span>{spot.label}
                   </button>
                 ))}
-                <button className="tour-nav tour-nav--left" onClick={() => move(-1)} aria-label="Local anterior"><ArrowLeft /></button>
-                <button className="tour-nav tour-nav--right" onClick={() => move(1)} aria-label="Siguiente local"><ArrowRight /></button>
+                <button className="tour-nav tour-nav--left" onPointerDown={(event) => event.stopPropagation()} onClick={() => move(-1)} aria-label="Local anterior"><ArrowLeft /></button>
+                <button className="tour-nav tour-nav--right" onPointerDown={(event) => event.stopPropagation()} onClick={() => move(1)} aria-label="Siguiente local"><ArrowRight /></button>
                 <div className="tour-photo-caption">
                   <span>{activeStop.freshness}</span>
                   <strong>{activeStop.title}</strong>

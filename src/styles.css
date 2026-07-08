@@ -476,19 +476,19 @@ h1, h2, h3, h4 { font-family: 'Manrope', sans-serif; color: var(--navy); }
 .tour-photo-card > img { width: 100%; height: 100%; min-height: 560px; object-fit: cover; transition: transform .32s ease, object-position .16s ease; user-select: none; }
 .tour-photo-card--immersive { cursor: grab; }
 .tour-photo-card--immersive.is-dragging { cursor: grabbing; }
-.tour-photo-card--immersive > img { transform: scale(1.12); }
+.tour-photo-card--immersive > img { transform: scale(1.06); }
 .tour-photo-card--immersive::before { content: ''; position: absolute; inset: 16px; z-index: 2; pointer-events: none; border: 1px solid rgba(255,255,255,.2); border-radius: 18px; box-shadow: inset 0 0 70px rgba(0,0,0,.18); }
 .tour-photo-gradient { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(0,0,0,.05), transparent 38%, rgba(0,0,0,.58)); }
 .tour-immersive-bar { position: absolute; z-index: 5; top: 18px; left: 18px; right: 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; pointer-events: none; }
 .tour-immersive-bar span { display: inline-flex; align-items: center; gap: 7px; padding: 8px 12px; color: #fff; border: 1px solid rgba(255,255,255,.26); border-radius: 999px; background: rgba(18,25,37,.58); backdrop-filter: blur(10px); font-size: 10px; font-weight: 800; }
 .tour-immersive-bar button { min-height: 34px; padding: 0 13px; border: 1px solid rgba(255,255,255,.4); border-radius: 999px; color: var(--blue); background: rgba(255,255,255,.94); font-size: 10px; font-weight: 800; cursor: pointer; pointer-events: auto; }
-.tour-hotspot { position: absolute; transform: translate(-50%, -50%); display: inline-flex; align-items: center; gap: 7px; padding: 6px 10px; border: 1px solid rgba(255,255,255,.65); border-radius: 999px; color: #fff; background: rgba(21,25,32,.62); backdrop-filter: blur(8px); font-size: 10px; font-weight: 800; cursor: pointer; }
+.tour-hotspot { position: absolute; z-index: 4; transform: translate(-50%, -50%); display: inline-flex; align-items: center; gap: 7px; padding: 6px 10px; border: 1px solid rgba(255,255,255,.65); border-radius: 999px; color: #fff; background: rgba(21,25,32,.62); backdrop-filter: blur(8px); font-size: 10px; font-weight: 800; cursor: pointer; }
 .tour-hotspot span { width: 10px; height: 10px; border-radius: 50%; background: #24c566; box-shadow: 0 0 0 6px rgba(36,197,102,.22); }
-.tour-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; display: grid; place-items: center; border: 0; border-radius: 50%; color: var(--blue); background: rgba(255,255,255,.92); box-shadow: var(--shadow); cursor: pointer; }
+.tour-nav { position: absolute; z-index: 5; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; display: grid; place-items: center; border: 0; border-radius: 50%; color: var(--blue); background: rgba(255,255,255,.92); box-shadow: var(--shadow); cursor: pointer; }
 .tour-nav svg { width: 20px; }
 .tour-nav--left { left: 18px; }
 .tour-nav--right { right: 18px; }
-.tour-photo-caption { position: absolute; left: 22px; right: 22px; bottom: 22px; display: flex; align-items: center; gap: 12px; color: #fff; }
+.tour-photo-caption { position: absolute; z-index: 4; left: 22px; right: 22px; bottom: 22px; display: flex; align-items: center; gap: 12px; color: #fff; }
 .tour-photo-caption span { padding: 7px 10px; border-radius: 999px; color: #fff; background: var(--blue); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
 .tour-photo-caption strong { font: 800 26px 'Manrope'; }
 .tour-photo-caption small { margin-left: auto; color: rgba(255,255,255,.82); font-size: 11px; }
