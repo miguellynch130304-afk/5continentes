@@ -31,6 +31,9 @@ export default function VirtualTourPage({ Layout }) {
   const initialIndex = Math.max(0, tourStops.findIndex((stop) => stop.local === initialStop || stop.id === initialStop));
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [query, setQuery] = useState('');
+  const [immersive, setImmersive] = useState(true);
+  const [dragging, setDragging] = useState(false);
+  const [look, setLook] = useState({ x: 50, y: 50 });
   const activeStop = tourStops[activeIndex];
   const activeStore = getStore(activeStop.id);
 
@@ -43,14 +46,32 @@ export default function VirtualTourPage({ Layout }) {
   const selectStop = (stop) => {
     const nextIndex = tourStops.findIndex((item) => item.id === stop.id);
     setActiveIndex(nextIndex);
+    setLook({ x: 50, y: 50 });
     setSearchParams({ local: stop.local });
   };
 
   const move = (direction) => {
     const nextIndex = clampIndex(activeIndex + direction);
     setActiveIndex(nextIndex);
+    setLook({ x: 50, y: 50 });
     setSearchParams({ local: tourStops[nextIndex].local });
   };
+
+  const updateLook = (event) => {
+    if (!immersive && !dragging) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = Math.min(100, Math.max(0, ((event.clientX - rect.left) / rect.width) * 100));
+    const y = Math.min(100, Math.max(0, ((event.clientY - rect.top) / rect.height) * 100));
+    setLook({ x: Math.round(x), y: Math.round(y) });
+  };
+
+  const startLook = (event) => {
+    setDragging(true);
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    updateLook(event);
+  };
+
+  const stopLook = () => setDragging(false);
 
   return (
     <Layout>
@@ -79,7 +100,7 @@ export default function VirtualTourPage({ Layout }) {
             <div>
               <span className="eyebrow">Modo visitante</span>
               <h2>Recorrido por pasillos</h2>
-              <p>Demo con fotos generadas por IA. En producción, cada tienda subiría su foto diaria desde el panel.</p>
+              <p>Vista referencial del flujo. En producción, cada tienda subiría su foto diaria desde el panel.</p>
             </div>
             <div className="tour-counter"><Eye size={16} /> {activeIndex + 1} de {tourStops.length} locales visibles</div>
           </div>
@@ -104,8 +125,26 @@ export default function VirtualTourPage({ Layout }) {
             </aside>
 
             <div className="tour-viewer">
-              <div className="tour-photo-card">
-                <img src={activeStop.image} alt={`Foto diaria de ${activeStop.title}`} />
+              <div
+                className={`tour-photo-card ${immersive ? 'tour-photo-card--immersive' : ''} ${dragging ? 'is-dragging' : ''}`}
+                onPointerDown={startLook}
+                onPointerMove={updateLook}
+                onPointerUp={stopLook}
+                onPointerCancel={stopLook}
+                onPointerLeave={stopLook}
+              >
+                <div className="tour-immersive-bar">
+                  <span><MousePointer2 size={14} /> {immersive ? 'Arrastra o mueve para mirar' : 'Vista fija'}</span>
+                  <button onClick={(event) => { event.stopPropagation(); setImmersive((value) => !value); }}>
+                    {immersive ? 'Vista normal' : 'Modo inmersivo'}
+                  </button>
+                </div>
+                <img
+                  src={activeStop.image}
+                  alt={`Foto diaria de ${activeStop.title}`}
+                  style={{ objectPosition: `${look.x}% ${Math.min(72, Math.max(30, look.y))}%` }}
+                  draggable="false"
+                />
                 <div className="tour-photo-gradient"></div>
                 {activeStop.hotSpots.map((spot) => (
                   <button className="tour-hotspot" style={{ left: `${spot.x}%`, top: `${spot.y}%` }} key={spot.label}>
@@ -119,6 +158,17 @@ export default function VirtualTourPage({ Layout }) {
                   <strong>{activeStop.title}</strong>
                   <small>{activeStop.updatedAt}</small>
                 </div>
+              </div>
+
+              <div className="tour-path">
+                <span className="tour-path__label">Ruta del pasillo</span>
+                {tourStops.map((stop, index) => (
+                  <button className={stop.id === activeStop.id ? 'active' : ''} key={stop.id} onClick={() => selectStop(stop)}>
+                    <i>{index + 1}</i>
+                    <strong>{stop.local}</strong>
+                    <small>{stop.title}</small>
+                  </button>
+                ))}
               </div>
 
               <div className="tour-info-grid">

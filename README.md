@@ -40,7 +40,7 @@ npm run build
 - `src/features/radar/`: experiencia 5C Ahora y solicitudes simuladas.
 - `src/features/map/`: plano interno interactivo demostrativo.
 - `src/features/tour/`: recorrido virtual y fotos diarias de tiendas.
-- `assets/img/tour/`: imágenes generadas para la demo del recorrido.
+- `assets/img/tour/`: imágenes de referencia para la demo del recorrido.
 - `assets/`: recursos heredados de la plantilla original.
 
 ## Rutas principales de la demo
