@@ -31,9 +31,7 @@ export default function VirtualTourPage({ Layout }) {
   const initialIndex = Math.max(0, tourStops.findIndex((stop) => stop.local === initialStop || stop.id === initialStop));
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [query, setQuery] = useState('');
-  const [immersive, setImmersive] = useState(false);
-  const [dragging, setDragging] = useState(false);
-  const [look, setLook] = useState({ x: 50, y: 50 });
+  const [focusedSpot, setFocusedSpot] = useState(null);
   const activeStop = tourStops[activeIndex];
   const activeStore = getStore(activeStop.id);
 
@@ -46,36 +44,16 @@ export default function VirtualTourPage({ Layout }) {
   const selectStop = (stop) => {
     const nextIndex = tourStops.findIndex((item) => item.id === stop.id);
     setActiveIndex(nextIndex);
-    setLook({ x: 50, y: 50 });
+    setFocusedSpot(null);
     setSearchParams({ local: stop.local });
   };
 
   const move = (direction) => {
     const nextIndex = clampIndex(activeIndex + direction);
     setActiveIndex(nextIndex);
-    setLook({ x: 50, y: 50 });
+    setFocusedSpot(null);
     setSearchParams({ local: tourStops[nextIndex].local });
   };
-
-  const isInteractiveTarget = (target) => target.closest('button, a, input, textarea, select, label');
-
-  const updateLook = (event) => {
-    if (isInteractiveTarget(event.target)) return;
-    if (!immersive && !dragging) return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = Math.min(100, Math.max(0, ((event.clientX - rect.left) / rect.width) * 100));
-    const y = Math.min(100, Math.max(0, ((event.clientY - rect.top) / rect.height) * 100));
-    setLook({ x: Math.round(x), y: Math.round(y) });
-  };
-
-  const startLook = (event) => {
-    if (!immersive || isInteractiveTarget(event.target) || event.pointerType === 'touch') return;
-    setDragging(true);
-    event.currentTarget.setPointerCapture?.(event.pointerId);
-    updateLook(event);
-  };
-
-  const stopLook = () => setDragging(false);
 
   return (
     <Layout>
@@ -129,40 +107,38 @@ export default function VirtualTourPage({ Layout }) {
             </aside>
 
             <div className="tour-viewer">
-              <div
-                className={`tour-photo-card ${immersive ? 'tour-photo-card--immersive' : ''} ${dragging ? 'is-dragging' : ''}`}
-                onPointerDown={startLook}
-                onPointerMove={updateLook}
-                onPointerUp={stopLook}
-                onPointerCancel={stopLook}
-                onPointerLeave={stopLook}
-              >
-                <div className="tour-immersive-bar">
-                  <span><MousePointer2 size={14} /> {immersive ? 'Mueve el cursor para mirar' : 'Vista normal para explorar'}</span>
-                  <button
-                    onPointerDown={(event) => event.stopPropagation()}
-                    onClick={(event) => { event.stopPropagation(); setImmersive((value) => !value); }}
-                  >
-                    {immersive ? 'Vista normal' : 'Modo inmersivo'}
-                  </button>
+              <div className={`tour-photo-card ${focusedSpot ? 'tour-photo-card--focused' : ''}`}>
+                <div className="tour-explore-bar">
+                  <span><MousePointer2 size={14} /> Toca una zona para acercarte</span>
+                  <button onClick={() => setFocusedSpot(null)} disabled={!focusedSpot}>Vista general</button>
                 </div>
                 <img
                   src={activeStop.image}
                   alt={`Foto diaria de ${activeStop.title}`}
-                  style={{ objectPosition: `${look.x}% ${Math.min(72, Math.max(30, look.y))}%` }}
+                  style={{
+                    transformOrigin: `${focusedSpot?.x ?? 50}% ${focusedSpot?.y ?? 50}%`,
+                    transform: focusedSpot ? 'scale(1.62)' : 'scale(1)',
+                  }}
                   draggable="false"
                 />
                 <div className="tour-photo-gradient"></div>
                 {activeStop.hotSpots.map((spot) => (
                   <button
-                    className="tour-hotspot"
+                    className={`tour-hotspot ${focusedSpot?.label === spot.label ? 'active' : ''}`}
                     style={{ left: `${spot.x}%`, top: `${spot.y}%` }}
                     key={spot.label}
-                    onPointerDown={(event) => event.stopPropagation()}
+                    onClick={() => setFocusedSpot(spot)}
                   >
                     <span></span>{spot.label}
                   </button>
                 ))}
+                {focusedSpot && (
+                  <div className="tour-focus-card">
+                    <span>Estás mirando</span>
+                    <strong>{focusedSpot.label}</strong>
+                    <p>Revisa esta zona de la vitrina y consulta por WhatsApp si algo te llama la atención.</p>
+                  </div>
+                )}
                 <button className="tour-nav tour-nav--left" onPointerDown={(event) => event.stopPropagation()} onClick={() => move(-1)} aria-label="Local anterior"><ArrowLeft /></button>
                 <button className="tour-nav tour-nav--right" onPointerDown={(event) => event.stopPropagation()} onClick={() => move(1)} aria-label="Siguiente local"><ArrowRight /></button>
                 <div className="tour-photo-caption">
@@ -170,6 +146,15 @@ export default function VirtualTourPage({ Layout }) {
                   <strong>{activeStop.title}</strong>
                   <small>{activeStop.updatedAt}</small>
                 </div>
+              </div>
+
+              <div className="tour-zone-tabs">
+                <button className={!focusedSpot ? 'active' : ''} onClick={() => setFocusedSpot(null)}>Vista general</button>
+                {activeStop.hotSpots.map((spot) => (
+                  <button className={focusedSpot?.label === spot.label ? 'active' : ''} key={spot.label} onClick={() => setFocusedSpot(spot)}>
+                    {spot.label}
+                  </button>
+                ))}
               </div>
 
               <div className="tour-path">
