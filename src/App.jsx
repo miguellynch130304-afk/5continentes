@@ -7,6 +7,7 @@ import {
   BarChart3,
   BellRing,
   Building2,
+  Camera,
   Check,
   ChevronRight,
   Clock3,
@@ -15,6 +16,7 @@ import {
   Facebook,
   Instagram,
   Inbox,
+  ImageUp,
   Laptop,
   LayoutDashboard,
   MapPin,
@@ -40,7 +42,9 @@ import { categories, getStore, products, stores, whatsappUrl } from './data';
 import facadeImage from '../assets/img/brand/fachada-5-continentes.png';
 import RadarPage from './features/radar/RadarPage';
 import MallMapPage from './features/map/MallMap';
+import VirtualTourPage from './features/tour/VirtualTour';
 import { merchantLeads } from './features/radar/demoData';
+import { tourStops } from './features/tour/tourData';
 
 const categoryIcons = { Laptop, Shirt, Armchair, Sparkles, Dumbbell, Watch };
 
@@ -87,6 +91,7 @@ function Header() {
             <NavLink to="/" onClick={() => setOpen(false)}>Inicio</NavLink>
             <NavLink to="/explorar" onClick={() => setOpen(false)}>Tiendas</NavLink>
             <NavLink to="/mapa" onClick={() => setOpen(false)}>Mapa</NavLink>
+            <NavLink to="/recorrido" onClick={() => setOpen(false)}>Recorrido</NavLink>
             <NavLink to="/radar" className="nav__live" onClick={() => setOpen(false)}><span></span> 5C Ahora</NavLink>
             <NavLink to="/panel" className="nav__admin" onClick={() => setOpen(false)}>
               <UserRound size={17} /> Mi negocio
@@ -111,7 +116,7 @@ function Footer() {
           <div className="socials"><a href="#" aria-label="Facebook"><Facebook size={18} /></a><a href="#" aria-label="Instagram"><Instagram size={18} /></a></div>
         </div>
         <div><h4>Explora</h4><Link to="/explorar">Todas las tiendas</Link><Link to="/explorar?categoria=Tecnología">Tecnología</Link><Link to="/explorar?categoria=Moda">Moda</Link></div>
-        <div><h4>Centro comercial</h4><Link to="/radar">5C Ahora</Link><Link to="/mapa">Mapa del centro</Link><Link to="/panel">Acceso para tiendas</Link></div>
+        <div><h4>Centro comercial</h4><Link to="/radar">5C Ahora</Link><Link to="/recorrido">Recorrido virtual</Link><Link to="/mapa">Mapa del centro</Link><Link to="/panel">Acceso para tiendas</Link></div>
         <div><h4>Visítanos</h4><p><MapPin size={16} /> Av. Argentina 3093, Lima</p><p><Clock3 size={16} /> Lun. a dom. · 9:00 a. m. – 8:00 p. m.</p></div>
       </div>
       <div className="container footer__bottom">© 2026 Centro Comercial 5 Continentes <span>Privacidad · Términos</span></div>
@@ -233,6 +238,29 @@ function Home() {
         </div>
       </section>
 
+      <section className="section tour-promo-section">
+        <div className="container tour-promo">
+          <div className="tour-promo__copy">
+            <span className="pill"><Camera size={16} /> Nueva vitrina viva</span>
+            <h2>Recorre las tiendas con fotos del día.</h2>
+            <p>Antes de ir, mira cómo está el puesto hoy: vitrinas, productos recién llegados y novedades visuales subidas por cada negociante.</p>
+            <div className="tour-promo__actions">
+              <Link className="button button--primary" to="/recorrido">Ver recorrido virtual <ArrowRight size={18} /></Link>
+              <Link className="button button--outline" to="/panel">Actualizar mi foto <ImageUp size={18} /></Link>
+            </div>
+          </div>
+          <div className="tour-promo__stack">
+            {tourStops.slice(0, 3).map((stop) => (
+              <Link to={`/recorrido?local=${stop.local}`} className="tour-promo-card" key={stop.id}>
+                <img src={stop.image} alt={`Foto diaria de ${stop.title}`} />
+                <span>{stop.local}</span>
+                <strong>{stop.title}</strong>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="business-cta">
         <div className="container business-cta__inner"><div><span className="pill pill--dark"><Store size={16} /> ¿Tienes una tienda aquí?</span><h2>Haz visible tu negocio en 5 Continentes</h2><p>Personaliza tu perfil, publica productos y recibe consultas de nuevos clientes.</p></div><Link to="/panel" className="button button--light">Administrar mi tienda <ArrowRight size={18} /></Link></div>
       </section>
@@ -347,9 +375,11 @@ function ProductPage() {
 function Dashboard() {
   const [active, setActive] = useState('resumen');
   const [saved, setSaved] = useState(false);
+  const [dailyPhotoUpdated, setDailyPhotoUpdated] = useState(false);
   const [leadStatuses, setLeadStatuses] = useState({});
   const store = stores[0];
   const storeProducts = products.filter((product) => product.storeId === store.id);
+  const storeTourStop = tourStops.find((stop) => stop.id === store.id) || tourStops[0];
   const save = (event) => {
     event.preventDefault();
     setSaved(true);
@@ -364,6 +394,7 @@ function Dashboard() {
         <nav>
           <button className={active === 'resumen' ? 'active' : ''} onClick={() => setActive('resumen')}><LayoutDashboard /> Resumen</button>
           <button className={active === 'perfil' ? 'active' : ''} onClick={() => setActive('perfil')}><Store /> Perfil del negocio</button>
+          <button className={active === 'vitrina' ? 'active' : ''} onClick={() => setActive('vitrina')}><Camera /> Foto diaria</button>
           <button className={active === 'productos' ? 'active' : ''} onClick={() => setActive('productos')}><Package /> Mis productos <span>{storeProducts.length}</span></button>
           <button className={active === 'solicitudes' ? 'active' : ''} onClick={() => setActive('solicitudes')}><Inbox /> Solicitudes <span>{merchantLeads.length}</span></button>
           <Link to={`/tienda/${store.id}`}><Eye /> Ver tienda pública</Link>
@@ -383,6 +414,26 @@ function Dashboard() {
             </div>
           </>}
           {active === 'perfil' && <form className="editor panel-card" onSubmit={save}><div className="dashboard-title"><div><h1>Perfil del negocio</h1><p>Esta información será visible para todos los visitantes.</p></div><button className="button button--primary" type="submit">Guardar cambios</button></div><div className="form-grid"><label>Nombre comercial<input defaultValue={store.name} /></label><label>Categoría<select defaultValue={store.category}>{categories.map((item) => <option key={item.id}>{item.name}</option>)}</select></label><label className="form-wide">Descripción<textarea defaultValue={store.description} rows="4" /></label><label>WhatsApp<input defaultValue={`+${store.phone}`} /></label><label>Ubicación<input defaultValue={store.location} /></label><label>Horario<input defaultValue={store.schedule} /></label><label>Piso<input defaultValue={store.floor} /></label></div></form>}
+          {active === 'vitrina' && <section className="panel-card daily-photo-panel">
+            <div className="dashboard-title">
+              <div><h1>Foto diaria del local</h1><p>Esta imagen alimentaría el recorrido virtual para que los compradores vean novedades reales del día.</p></div>
+              <Link to={`/recorrido?local=${storeTourStop.local}`} className="button button--outline"><Eye size={18} /> Ver en recorrido</Link>
+            </div>
+            <div className="daily-photo-grid">
+              <div className="daily-photo-preview">
+                <img src={storeTourStop.image} alt={`Foto diaria de ${store.name}`} />
+                <span>{dailyPhotoUpdated ? 'Actualizado hace unos segundos' : storeTourStop.updatedAt}</span>
+              </div>
+              <div className="daily-photo-editor">
+                <span className="eyebrow">Demo sin base de datos</span>
+                <h2>Sube una foto de tu puesto cada día</h2>
+                <p>En la versión real, el encargado tomaría una foto desde su celular, escribiría una nota corta y quedaría visible en el recorrido.</p>
+                <label>Mensaje del día<textarea rows="4" defaultValue={storeTourStop.caption} /></label>
+                <label className="fake-upload"><ImageUp /><span><strong>Seleccionar foto del local</strong><small>JPG o PNG desde el celular del negociante</small></span><input type="file" accept="image/*" /></label>
+                <button className="button button--primary" onClick={() => { setDailyPhotoUpdated(true); setSaved(true); window.setTimeout(() => setSaved(false), 2500); }}>Publicar foto de hoy</button>
+              </div>
+            </div>
+          </section>}
           {active === 'productos' && <><div className="dashboard-title"><div><h1>Mis productos</h1><p>Publica información útil, sin precio ni carrito de compra.</p></div><button className="button button--primary"><Plus size={18} /> Nuevo producto</button></div><div className="products-table panel-card"><div className="table-head"><span>Producto</span><span>Categoría</span><span>Estado</span><span>Acciones</span></div>{storeProducts.map((product) => <div className="table-row" key={product.id}><span><img src={product.image} alt="" /><strong>{product.name}</strong></span><span>{product.category}</span><span className="status"><i></i> Visible</span><span><Link to={`/producto/${product.id}`} aria-label="Ver"><Eye /></Link><button aria-label="Editar"><Pencil /></button></span></div>)}</div></>}
           {active === 'solicitudes' && <>
             <div className="dashboard-title"><div><span className="live-pill"><span className="live-dot"></span> 5C Ahora</span><h1>Solicitudes de clientes</h1><p>Responde rápido para aparecer entre las opciones confirmadas.</p></div><span className="response-score"><strong>92%</strong> tasa de respuesta</span></div>
@@ -416,6 +467,7 @@ export default function App() {
       <Route path="/producto/:productId" element={<ProductPage />} />
       <Route path="/radar" element={<RadarPage Layout={Layout} />} />
       <Route path="/mapa" element={<MallMapPage Layout={Layout} />} />
+      <Route path="/recorrido" element={<VirtualTourPage Layout={Layout} />} />
       <Route path="/panel" element={<Dashboard />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

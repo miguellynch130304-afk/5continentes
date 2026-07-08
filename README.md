@@ -29,6 +29,7 @@ npm run build
 - Flujo demostrativo **5C Ahora**: solicitud, búsqueda simulada y respuestas confirmadas.
 - Separación temporal demostrativa con código.
 - Mapa interno interactivo por pisos y locales.
+- Recorrido virtual con fotos diarias simuladas de los puestos.
 - Bandeja de solicitudes para que cada negocio responda disponibilidad.
 
 ## Estructura
@@ -38,13 +39,16 @@ npm run build
 - `src/styles.css`: sistema visual responsive.
 - `src/features/radar/`: experiencia 5C Ahora y solicitudes simuladas.
 - `src/features/map/`: plano interno interactivo demostrativo.
+- `src/features/tour/`: recorrido virtual y fotos diarias de tiendas.
+- `assets/img/tour/`: imágenes generadas para la demo del recorrido.
 - `assets/`: recursos heredados de la plantilla original.
 
 ## Rutas principales de la demo
 
 - `/radar`: solicitud del comprador y respuestas de tiendas.
 - `/mapa`: búsqueda y ubicación de locales por piso.
-- `/panel`: gestión del negocio y bandeja de solicitudes.
+- `/recorrido`: recorrido visual por tiendas con foto diaria y hotspots.
+- `/panel`: gestión del negocio, foto diaria y bandeja de solicitudes.
 
 Las respuestas, reservas y posiciones del mapa son datos de demostración. No se
 persisten al recargar la página.
